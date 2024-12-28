@@ -1,3 +1,4 @@
+import config from "@/config";
 import { Ticker } from "../domain-models";
 import instance from "./instance";
 
@@ -14,6 +15,7 @@ interface RequestFetchAllTickersArgs {
   order?: "asc" | "desc";
   limit?: number;
   sort?: string;
+  nextURL?: string;
   options?: {
     signal?: AbortSignal;
   };
@@ -47,11 +49,12 @@ const requestFetchAllTickers = async ({
   order,
   limit,
   sort,
+  nextURL,
   options,
 }: RequestFetchAllTickersArgs): Promise<RequestFetchAllTickersResult> => {
   const {
     data: { results, count, next_url, error },
-  } = await instance.get<RequestFetchAllTickersResponse>("/reference/tickers", {
+  } = await instance.get<RequestFetchAllTickersResponse>(nextURL ? nextURL.replace(config.APIURL, '') :"/reference/tickers", {
     params: {
       ticker,
       type,

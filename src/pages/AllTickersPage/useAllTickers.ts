@@ -1,6 +1,7 @@
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { Ticker } from "../../domain-models";
 import { requestFetchAllTickers } from "../../network";
+import { calculateInitialStocks } from "./calculateInitialStocks";
 
 interface State {
   isLoading: boolean;
@@ -19,7 +20,7 @@ interface State {
     pageSize?: number;
   };
   count: number;
-  nextURL: string | null;
+  nextURL?: string | null;
   error: unknown;
 }
 
@@ -31,7 +32,7 @@ type Action =
       type: "FETCH_ALL_SUCCESS";
       data: Ticker[];
       count: number;
-      nextURL: string;
+      nextURL?: string | null;
     }
   | {
       type: "FETCH_ALL_ERROR";
@@ -52,7 +53,7 @@ const initialState: State = {
   isLoading: false,
   data: [],
   filters: {
-    pageSize: 16,
+    pageSize: calculateInitialStocks() || 10,
   },
   count: 0,
   nextURL: null,
@@ -94,10 +95,12 @@ function reducer(state: State = initialState, action: Action): State {
 }
 
 const useAllTickers = () => {
-  const [{ isLoading, data, error, filters }, dispatch] = useReducer(
+  const [{ isLoading, data, error, filters, nextURL }, dispatch] = useReducer(
     reducer,
     initialState
   );
+
+  const [loadMoreTrigger, setLoadMoreTrigger] = useState({});
 
   useEffect(() => {
     const controller = new AbortController();
@@ -108,7 +111,7 @@ const useAllTickers = () => {
       search: filters.searchText,
       type: filters.type,
       market: filters.market,
-      exchange: filters.exchange,
+      exchange: filters.exchange || "XNAS",
       cusip: filters.cusip,
       cik: filters.cik,
       date: filters.date,
@@ -116,6 +119,7 @@ const useAllTickers = () => {
       order: filters.order,
       sort: filters.sort,
       limit: filters.pageSize,
+      nextURL: nextURL ?? undefined,
       options: {
         signal: controller.signal,
       },
@@ -137,17 +141,21 @@ const useAllTickers = () => {
     return () => {
       controller.abort();
     };
-  }, [filters]);
+  }, [filters, loadMoreTrigger]);
 
   const changeFilters = (filters: State["filters"]) =>
     dispatch({ type: "CHANGE_FILTERS", ...filters } as Action);
+
+  const loadMore = () => setLoadMoreTrigger({});
 
   return {
     isLoadingAllTickers: isLoading,
     allTickers: data,
     loadingAllTickersError: error,
     allTickersFilters: filters,
+    hasNextPage: !!nextURL,
     changeAllTickersFilters: changeFilters,
+    loadMoreTickers: loadMore,
   };
 };
 

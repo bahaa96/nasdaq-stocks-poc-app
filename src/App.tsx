@@ -1,4 +1,3 @@
-import "./App.css";
 import AllTickersPage from "./pages/AllTickersPage";
 
 function App() {
