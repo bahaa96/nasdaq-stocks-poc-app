@@ -25,6 +25,7 @@ interface RequestFetchAllTickersResponse {
   request_id: string;
   results: Ticker[];
   status: string;
+  error?: string;
 }
 
 interface RequestFetchAllTickersResult {
@@ -34,36 +35,36 @@ interface RequestFetchAllTickersResult {
 }
 
 const requestFetchAllTickers = async ({
-    ticker,
-    type,
-    market,
-    exchange,
-    cusip,
-    cik,
-    date,
-    search,
-    active,
-    order,
-    limit,
-    sort,
+  ticker,
+  type,
+  market,
+  exchange,
+  cusip,
+  cik,
+  date,
+  search,
+  active,
+  order,
+  limit,
+  sort,
   options,
 }: RequestFetchAllTickersArgs): Promise<RequestFetchAllTickersResult> => {
   const {
-    data: { results, count, next_url },
+    data: { results, count, next_url, error },
   } = await instance.get<RequestFetchAllTickersResponse>("/reference/tickers", {
     params: {
-        ticker,
-        type,
-        market,
-        exchange,
-        cusip,
-        cik,
-        date,
-        search,
-        active,
-        order,
-        limit,
-        sort,
+      ticker,
+      type,
+      market,
+      exchange,
+      cusip,
+      cik,
+      date,
+      search,
+      active,
+      order,
+      limit,
+      sort,
     },
     signal: options?.signal,
   });
