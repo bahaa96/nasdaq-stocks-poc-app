@@ -4,12 +4,13 @@ import { Input } from "@/components/ui/input";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { calculateInitialStocks } from "./calculateInitialStocks";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { Ticker } from "@/domain-models";
 
 const NasdaqLogo = () => (
   <div className="text-white font-bold text-xl">NASDAQ</div>
 );
 
-const StockCard = ({ stock }) => (
+const StockCard = ({ stock }: { stock: Ticker }) => (
   <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex flex-col items-start justify-center h-full">
     <span className="text-lg font-medium text-white">{stock.ticker}</span>
     <span className="text-sm text-gray-400 truncate w-full" title={stock.name}>
@@ -23,9 +24,6 @@ const AllTickersPage = () => {
     isLoadingAllTickers,
     allTickers,
     hasNextPage,
-    loadingAllTickersError,
-    changeAllTickersFilters,
-    allTickersFilters,
     loadMoreTickers,
   } = useAllTickers();
 

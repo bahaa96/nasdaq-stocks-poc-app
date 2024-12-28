@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import {  useEffect, useReducer, useState } from "react";
 import { Ticker } from "../../domain-models";
 import { requestFetchAllTickers } from "../../network";
 import { calculateInitialStocks } from "./calculateInitialStocks";
