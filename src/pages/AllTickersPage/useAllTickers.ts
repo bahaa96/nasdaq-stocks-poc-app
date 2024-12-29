@@ -1,11 +1,11 @@
 import {  useEffect, useReducer, useState } from "react";
-import { Ticker } from "../../domain-models";
+import { StockTicker } from "../../domain-models";
 import { requestFetchAllTickers } from "../../network";
 import { calculateInitialStocks } from "./calculateInitialStocks";
 
 interface State {
   isLoading: boolean;
-  data: Ticker[];
+  data: StockTicker[];
   filters: {
     searchText?: string;
     type?: string;
@@ -30,7 +30,7 @@ type Action =
     }
   | {
       type: "FETCH_ALL_SUCCESS";
-      data: Ticker[];
+      data: StockTicker[];
       count: number;
       nextURL?: string | null;
     }
@@ -53,7 +53,7 @@ const initialState: State = {
   isLoading: false,
   data: [],
   filters: {
-    pageSize: calculateInitialStocks() || 10,
+    pageSize: calculateInitialStocks(4) || 10,
   },
   count: 0,
   nextURL: null,

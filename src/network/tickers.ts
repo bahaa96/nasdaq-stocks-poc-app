@@ -1,5 +1,5 @@
-import config from "@/config";
-import { Ticker } from "../domain-models";
+import config from "../config";
+import { StockTicker } from "../domain-models";
 import instance from "./instance";
 
 interface RequestFetchAllTickersArgs {
@@ -25,15 +25,15 @@ interface RequestFetchAllTickersResponse {
   count: number;
   next_url: string;
   request_id: string;
-  results: Ticker[];
+  results: StockTicker[];
   status: string;
   error?: string;
 }
 
 interface RequestFetchAllTickersResult {
-  data: Ticker[];
+  data: StockTicker[];
   count: number;
-  nextURL: string;
+  nextURL: string | null;
 }
 
 const requestFetchAllTickers = async ({
@@ -54,23 +54,26 @@ const requestFetchAllTickers = async ({
 }: RequestFetchAllTickersArgs): Promise<RequestFetchAllTickersResult> => {
   const {
     data: { results, count, next_url, error },
-  } = await instance.get<RequestFetchAllTickersResponse>(nextURL ? nextURL.replace(config.APIURL, '') :"/reference/tickers", {
-    params: {
-      ticker,
-      type,
-      market,
-      exchange,
-      cusip,
-      cik,
-      date,
-      search,
-      active,
-      order,
-      limit,
-      sort,
-    },
-    signal: options?.signal,
-  });
+  } = await instance.get<RequestFetchAllTickersResponse>(
+    nextURL ? nextURL.replace(config.APIURL, "") : "/reference/tickers",
+    {
+      params: {
+        ticker,
+        type,
+        market,
+        exchange,
+        cusip,
+        cik,
+        date,
+        search,
+        active,
+        order,
+        limit,
+        sort,
+      },
+      signal: options?.signal,
+    }
+  );
 
   if (error) {
     throw new Error(error);

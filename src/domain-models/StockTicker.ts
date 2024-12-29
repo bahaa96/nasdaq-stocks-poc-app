@@ -1,4 +1,4 @@
-export interface Ticker {
+export interface StockTicker {
   active: boolean;
   cik: string;
   composite_figi: string;

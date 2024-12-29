@@ -1,1 +1,1 @@
-export type { Ticker } from "./Ticker";
+export type { StockTicker } from "./StockTicker";
