@@ -20,13 +20,17 @@ run unit tests:
 
     npm test
 
-
 </br>
+
+The UI code is partially generated via [V0.dev](https://v0.dev/) for practical purposes which might be not recommended for mission-critical apps, for a production ready code we might refactor the UI code to be more declarative.
+
+I chose page scope state, react state was enough as it suits the case mentioned in the task, for a real-world case we might go for this more customizable [solution](https://github.com/bahaa96/nasdaq-stocks-poc-app/blob/main/src/pages/AllTickersPage/useAllTickers.ts) to avoid coupling the UI with react-query at this stage of the app lifecycle. For a realtime solution we can go for another state management architecture to avoid react-related reactivity problems for example Mobx and here's a [sample](https://github.com/bahaa96/nasdaq-stocks-poc-app/blob/main/src/pages/AllTickersPage/DataStore.ts) that can be used to turn this app into a realtime app using Mobx. any other domain-specific insights might reflect on state management architecture decision
+
 </br>
 
 ### Architecture Breakdown
 
-For this project I used mainly Clean Architeture with some taste of hexagonal architecture to make code unite more testable
+For this project I used mainly Clean Architeture with some taste of hexagonal architecture to expose code units to be more testable
 
 This is a draw of the main Skeleton:
 
